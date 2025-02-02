@@ -77,6 +77,8 @@ func handleConnection(session *SMTPSession) {
 		cmd := strings.ToUpper(command[0])
 
 		switch cmd {
+		case "HELO":
+			processHeloCommand(command[1], session)
 		case "MAIL":
 			// process mail commands
 			processMailCommand(command[1], session)
@@ -95,6 +97,13 @@ func handleConnection(session *SMTPSession) {
 		}
 	}
 
+}
+
+func processHeloCommand(command string, session *SMTPSession) {
+	// helo command is of the form helo <server name>, so serverName is the
+	// command coming in
+	session.serverName = command
+	session.reply("250 OK. \n")
 }
 
 func processMailCommand(command string, session *SMTPSession) {
